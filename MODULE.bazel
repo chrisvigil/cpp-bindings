@@ -1,0 +1,55 @@
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2026 The Contributors to Eclipse OpenSOVD (see CONTRIBUTORS)
+
+module(
+    name = "opensovd_cpp_bindings",
+    version = "0.0.1",
+    compatibility_level = 0,
+)
+
+bazel_dep(name = "rules_cc", version = "0.2.14")
+bazel_dep(name = "rules_shell", version = "0.6.1")
+bazel_dep(name = "rules_rust", version = "0.67.0")
+bazel_dep(name = "score_fault_lib", version = "0.0.1")
+
+# Select the provider's compiler at the root; otherwise rules_rust's default
+# toolchain can win when fault-lib is an external dependency.
+rust = use_extension("@rules_rust//rust:extensions.bzl", "rust")
+rust.toolchain(
+    edition = "2024",
+    versions = ["1.91.0"],
+)
+
+# The ABI and downstream test harness are not released upstream yet. Use the
+# paired checkout; replace this with an immutable upstream pin after it lands.
+local_path_override(
+    module_name = "score_fault_lib",
+    path = "../fault-lib",
+)
+
+# Bzlmod ignores overrides in dependencies. Keep these in sync with fault-lib's
+# MODULE.bazel until those dependencies are available from the registries.
+git_override(
+    module_name = "score_docs_as_code",
+    commit = "13ba715a95cfe85158b60d7f4748ba8e28895d8c",
+    remote = "https://github.com/eclipse-score/docs-as-code.git",
+)
+
+git_override(
+    module_name = "testing-utils",
+    commit = "a847c7464cfa47e000141631d1223b92560d2e58",
+    remote = "https://github.com/qorix-group/testing_tools.git",
+)
+
+archive_override(
+    module_name = "rules_boost",
+    strip_prefix = "rules_boost-master",
+    urls = ["https://github.com/nelhage/rules_boost/archive/refs/heads/master.tar.gz"],
+)
+
+bazel_dep(name = "score-baselibs", version = "0.0.0")
+git_override(
+    module_name = "score-baselibs",
+    commit = "46923f5c4f302bd9feae0261588687aaf32e3c5c",
+    remote = "https://github.com/eclipse-score/baselibs.git",
+)
