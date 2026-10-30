@@ -26,11 +26,10 @@ See the [architecture decision](docs/fault-reporter-architecture.md) and
 
 ### Build and test
 
-Current integration uses paired sibling checkouts: `cpp-bindings/` and
-`fault-lib/` with the C ABI and downstream conformance-harness changes.
-Upstream `fault-lib/main` does not yet contain this ABI. The local Bazel override
-is intentional; replace it with a reviewed immutable upstream commit after the
-dependency changes land. No Rust bridge crate or copied C header is needed here.
+Current integration pins the matching immutable `fault-lib` C ABI revision.
+Upstream `fault-lib/main` does not yet contain this ABI, so this branch points
+to the internally developed fork commit until the ABI is reviewed and merged.
+No sibling checkout, Rust bridge crate, or copied C header is required.
 
 On Linux, with Bazel **8.3.0** (Bazelisk honors `.bazelversion`):
 
@@ -39,8 +38,9 @@ bazel build //:fault_reporter //examples/cpp_reporter
 bazel test //tests:consumer //tests:e2e
 ```
 
-For a different checkout location, pass
-`--override_module=score_fault_lib=/absolute/path/to/fault-lib`.
+For local fault-lib development, a consumer root may temporarily override the
+`score_fault_lib` module with a checkout path; that override belongs in the
+consumer root and is not required by this module.
 The public Bazel dependency is `@opensovd_cpp_bindings//:fault_reporter`.
 Consumers must select C++17 themselves; this repository's `.bazelrc` does not
 propagate to a consuming root module. Root modules must also supply the

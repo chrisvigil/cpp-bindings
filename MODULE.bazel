@@ -20,11 +20,13 @@ rust.toolchain(
     versions = ["1.91.0"],
 )
 
-# The ABI and downstream test harness are not released upstream yet. Use the
-# paired checkout; replace this with an immutable upstream pin after it lands.
-local_path_override(
+# The ABI and downstream test harness are not released upstream yet. Pin the
+# matching immutable fault-lib fork revision so this module is consumable as a
+# dependency without requiring a sibling checkout.
+git_override(
     module_name = "score_fault_lib",
-    path = "../fault-lib",
+    commit = "1f75330ba5f59a6d3e3b6b6e1c24692c3ef5d451",
+    remote = "https://github.com/chrisvigil/fault-lib.git",
 )
 
 # Bzlmod ignores overrides in dependencies. Keep these in sync with fault-lib's

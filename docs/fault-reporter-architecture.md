@@ -94,11 +94,11 @@ The downstream Bazel root explicitly selects the 1.91.0 Rust toolchain as well;
 otherwise the default rules_rust compiler can take priority over the dependency's
 toolchain and fail to compile its Rust 2024 let-chains.
 
-The checked-in local override requires the paired checkout because neither the
-ABI nor the updated test harness has an upstream release. Integration sequence:
+The development fork is currently pinned immutably because neither the ABI nor
+the updated test harness has an upstream release. Integration sequence:
 
 1. Land the provider C ABI, its independent tests, and the exported test harness.
-2. Pin that immutable upstream commit/release here instead of `local_path_override`.
+2. Replace the temporary fork pin with an immutable upstream commit/release.
 3. Enable automatic upstream CI against the selected provider revision; coordinated
    CI can already run `tools/test_cargo.sh` and the Bazel tests with both checkouts.
 4. Package the wrapper with the matching provider-generated C header and binary.
