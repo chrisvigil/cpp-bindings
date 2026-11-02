@@ -25,7 +25,7 @@ rust.toolchain(
 # dependency without requiring a sibling checkout.
 git_override(
     module_name = "score_fault_lib",
-    commit = "1f75330ba5f59a6d3e3b6b6e1c24692c3ef5d451",
+    commit = "0cdd55661ce0d5bd819c315af9b783c79cf8197c",
     remote = "https://github.com/chrisvigil/fault-lib.git",
 )
 
